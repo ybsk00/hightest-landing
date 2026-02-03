@@ -147,7 +147,8 @@ export async function generateHealthcareResponse(
             } : undefined
         };
     } catch (error) {
-        console.error('Gemini Healthcare error:', error);
+        console.error('Gemini Healthcare error details:', JSON.stringify(error, null, 2));
+        console.error('Gemini Healthcare error message:', error);
         return {
             reply: '죄송해요, 잠시 연결이 불안정하네요 😅 다시 한번 말씀해주시겠어요?',
             requireLogin: false
@@ -226,7 +227,8 @@ export async function generateMedicalResponse(
             } : undefined
         };
     } catch (error) {
-        console.error('Gemini Medical error:', error);
+        console.error('Gemini Medical error details:', JSON.stringify(error, null, 2));
+        console.error('Gemini Medical error message:', error);
         return {
             reply: '죄송합니다. 일시적인 오류가 발생했습니다. 다시 시도해주세요.',
             agentUsed: `m-${agent}`

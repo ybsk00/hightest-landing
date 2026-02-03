@@ -14,11 +14,11 @@ export function GynecoSpinner({
     switchAfterMs?: number;
 }) {
     const beforeUrls = useMemo(
-        () => buildFrameUrls('/demo/gyneco/before', 10),
+        () => buildFrameUrls('/before', 10),
         []
     );
     const afterUrls = useMemo(
-        () => buildFrameUrls('/demo/gyneco/after', 10),
+        () => buildFrameUrls('/after', 10),
         []
     );
 

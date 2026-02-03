@@ -37,8 +37,8 @@ export default function ChatWidget() {
     useEffect(() => {
         if (isOpen && messages.length === 0) {
             const greeting = area === 'healthcare'
-                ? '안녕하세요! 💪 하이스트 헬스케어 상담실장이에요. 어떤 고민이 있으신가요? 편하게 말씀해주세요~'
-                : '안녕하세요. 하이스트 헬스케어 전문 상담실장입니다. 어떤 부분이 궁금하신가요?';
+                ? '안녕하세요! 💪 하이스트헬스케어 상담실장이에요. 어떤 고민이 있으신가요? 편하게 말씀해주세요~'
+                : '안녕하세요. 하이스트비뇨기과 의원 전문 상담실장입니다. 어떤 부분이 궁금하신가요?';
 
             addMessage({
                 role: 'assistant',

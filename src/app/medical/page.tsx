@@ -3,6 +3,7 @@
 import { useChatStore } from '@/store/chatStore';
 import { createClient } from '@supabase/supabase-js';
 import { useState, useEffect } from 'react';
+import Footer from '@/components/Footer';
 
 // Initialize Supabase (Client-side)
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
@@ -47,7 +48,7 @@ export default function MedicalPage() {
                             <div className="size-8 text-[#f27f0d]">
                                 <span className="material-symbols-outlined" style={{ fontSize: '32px' }}>health_and_safety</span>
                             </div>
-                            <h2 className="text-[#181411] text-xl font-bold leading-tight tracking-[-0.015em]">HIC Urology</h2>
+                            <h2 className="text-[#181411] text-xl font-bold leading-tight tracking-[-0.015em]">하이스트비뇨기과 의원</h2>
                         </div>
                         <div className="hidden md:flex items-center gap-8">
                             <nav className="flex gap-6 items-center">
@@ -92,7 +93,7 @@ export default function MedicalPage() {
                             전문 진료과목 안내
                         </h1>
                         <p className="text-[#8a7560] text-lg font-normal max-w-2xl">
-                            하이스트 비뇨의학과에서는 남성 건강을 위한 다양한 전문 진료를 제공합니다.
+                            하이스트비뇨기과 의원에서는 남성 건강을 위한 다양한 전문 진료를 제공합니다.
                         </p>
                     </div>
 
@@ -191,10 +192,7 @@ export default function MedicalPage() {
                 </div>
             </main>
 
-            {/* Footer */}
-            <footer className="w-full py-8 text-center text-gray-400 text-sm mt-8 border-t border-gray-200">
-                <p>© 2024 하이스트 비뇨의학과. All rights reserved.</p>
-            </footer>
+            <Footer brandName="하이스트비뇨기과 의원" />
         </div>
     );
 }

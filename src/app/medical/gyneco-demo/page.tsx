@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useChatStore } from '@/store/chatStore';
 import { GynecoSpinner } from '@/components/GynecoSpinner';
+import Footer from '@/components/Footer';
 
 import { createClient } from '@supabase/supabase-js';
 
@@ -62,7 +63,7 @@ export default function GynecoDemoPage() {
                                 <div className="size-8 text-[#f27f0d]">
                                     <span className="material-symbols-outlined" style={{ fontSize: '32px' }}>health_and_safety</span>
                                 </div>
-                                <h2 className="text-[#181411] text-xl font-bold leading-tight tracking-[-0.015em]">HIC Urology</h2>
+                                <h2 className="text-[#181411] text-xl font-bold leading-tight tracking-[-0.015em]">하이스트비뇨기과 의원</h2>
                             </div>
                         </div>
                     </div>
@@ -103,7 +104,7 @@ export default function GynecoDemoPage() {
                             <div className="size-8 text-[#f27f0d]">
                                 <span className="material-symbols-outlined" style={{ fontSize: '32px' }}>health_and_safety</span>
                             </div>
-                            <h2 className="text-[#181411] text-xl font-bold leading-tight tracking-[-0.015em]">HIC Urology</h2>
+                            <h2 className="text-[#181411] text-xl font-bold leading-tight tracking-[-0.015em]">하이스트비뇨기과 의원</h2>
                         </div>
                         <div className="hidden md:flex items-center gap-8">
                             <nav className="flex gap-6 items-center">
@@ -173,6 +174,7 @@ export default function GynecoDemoPage() {
                     </div>
                 </div>
             </main>
+            <Footer brandName="하이스트비뇨기과 의원" />
         </div>
     );
 }

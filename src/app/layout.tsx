@@ -3,8 +3,8 @@ import "./globals.css";
 import ChatWidget from "@/components/ChatWidget";
 
 export const metadata: Metadata = {
-  title: "하이스트 비뇨의학과 - HIC Urology",
-  description: "민감한 고민, 온라인에서 먼저 정리하세요. AI 시뮬레이션과 전문 상담을 경험해보세요.",
+  title: "하이스트비뇨기과 의원 - Heist Urology",
+  description: "민감한 고민, 온라인에서 하이스트비뇨기과 의원이 먼저 정리해 드립니다. AI 시뮬레이션과 전문 상담을 경험해보세요.",
 };
 
 export default function RootLayout({

@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { createClient } from '@supabase/supabase-js';
+import Footer from '@/components/Footer';
 
 // Initialize Supabase client
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
@@ -57,7 +58,7 @@ export default function LoginPage() {
                     <div className="size-8 flex items-center justify-center text-[#f27f0d]">
                         <span className="material-symbols-outlined" style={{ fontSize: '32px' }}>health_and_safety</span>
                     </div>
-                    <h2 className="text-white text-xl font-bold leading-tight tracking-[-0.015em]">HIC Urology</h2>
+                    <h2 className="text-white text-xl font-bold leading-tight tracking-[-0.015em]">하이스트비뇨기과 의원</h2>
                 </a>
             </header>
 
@@ -210,6 +211,7 @@ export default function LoginPage() {
                     </div>
                 </div>
             </main>
+            <Footer brandName="하이스트비뇨기과 의원" />
         </div>
     );
 }

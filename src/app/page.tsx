@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useChatStore } from '@/store/chatStore';
+import Footer from '@/components/Footer';
 
 type ConcernType = 'condition' | 'urination' | 'prostate' | 'health';
 
@@ -34,7 +35,7 @@ export default function Home() {
           <div className="size-8 flex items-center justify-center text-[#f27f0d]">
             <span className="material-symbols-outlined" style={{ fontSize: '32px' }}>health_and_safety</span>
           </div>
-          <h2 className="text-white text-xl font-bold leading-tight tracking-[-0.015em]">HIC Urology</h2>
+          <h2 className="text-white text-xl font-bold leading-tight tracking-[-0.015em]">하이스트헬스케어</h2>
         </div>
         <div className="flex flex-1 justify-end gap-4 items-center">
           <button
@@ -121,7 +122,7 @@ export default function Home() {
           <div className="flex flex-col max-w-[960px] flex-1 gap-8">
             <div className="flex flex-col gap-2 px-4">
               <h2 className="text-[#181411] text-3xl md:text-4xl font-black leading-tight tracking-[-0.033em]">고민을 선택해 주세요</h2>
-              <p className="text-[#8a7560] text-lg font-normal leading-normal">선택한 항목을 기준으로 안내가 정리됩니다</p>
+              <p className="text-[#8a7560] text-lg font-normal leading-normal">선택한 항목을 기준으로 하이스트헬스케어가 안내를 정리해 드립니다</p>
             </div>
 
             {/* Concern Cards */}
@@ -281,6 +282,7 @@ export default function Home() {
           </div>
         </div>
       </div>
+      <Footer brandName="하이스트헬스케어" />
     </div>
   );
 }

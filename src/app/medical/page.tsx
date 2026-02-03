@@ -1,14 +1,41 @@
 'use client';
 
 import { useChatStore } from '@/store/chatStore';
-import { useEffect } from 'react';
+import { createClient } from '@supabase/supabase-js';
+import { useState, useEffect } from 'react';
+
+// Initialize Supabase (Client-side)
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
+const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 export default function MedicalPage() {
     const { openChat, setArea } = useChatStore();
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     useEffect(() => {
         setArea('medical');
+
+        // Check session
+        const checkSession = async () => {
+            const { data: { session } } = await supabase.auth.getSession();
+            setIsLoggedIn(!!session);
+        };
+        checkSession();
+
+        // Listen for auth changes
+        const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+            setIsLoggedIn(!!session);
+        });
+
+        return () => subscription.unsubscribe();
     }, [setArea]);
+
+    const handleLogout = async () => {
+        await supabase.auth.signOut();
+        setIsLoggedIn(false);
+        window.location.href = '/';
+    };
 
     return (
         <div className="relative flex h-auto min-h-screen w-full flex-col overflow-x-hidden bg-[#f8f7f5]">
@@ -27,12 +54,21 @@ export default function MedicalPage() {
                                 <a className="text-[#181411] text-sm font-medium hover:text-[#f27f0d] transition-colors" href="/">홈</a>
                                 <a className="text-[#f27f0d] text-sm font-bold" href="/medical">진료과목</a>
                             </nav>
-                            <button
-                                onClick={() => window.location.href = '/login'}
-                                className="bg-[#f27f0d] hover:bg-orange-600 text-white text-sm font-bold h-10 px-6 rounded-full transition-colors shadow-sm"
-                            >
-                                로그인
-                            </button>
+                            {isLoggedIn ? (
+                                <button
+                                    onClick={handleLogout}
+                                    className="bg-gray-100 hover:bg-gray-200 text-gray-600 text-sm font-bold h-10 px-6 rounded-full transition-colors shadow-sm"
+                                >
+                                    로그아웃
+                                </button>
+                            ) : (
+                                <button
+                                    onClick={() => window.location.href = '/login'}
+                                    className="bg-[#f27f0d] hover:bg-orange-600 text-white text-sm font-bold h-10 px-6 rounded-full transition-colors shadow-sm"
+                                >
+                                    로그인
+                                </button>
+                            )}
                         </div>
                     </div>
                 </div>

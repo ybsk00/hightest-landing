@@ -117,13 +117,23 @@ export async function generateHealthcareResponse(
         const turnInfo = `[현재 ${turnCount}턴째] ${turnCount >= 3 ? '로그인 언급 필수!' : ''} ${turnCount >= 5 ? '반드시 로그인 CTA 포함!' : ''}`;
         const messageWithContext = `${message}\n\n---\n${turnInfo}`;
 
-        // Filter valid history entries (must alternate user/model)
-        const validHistory = conversationHistory
+        // Filter valid history entries (must alternate user/model) and ensure it starts with 'user'
+        let validHistory = conversationHistory
             .filter(msg => msg.content && msg.content.trim())
             .map(msg => ({
                 role: msg.role === 'assistant' ? 'model' as const : 'user' as const,
                 parts: [{ text: msg.content }]
             }));
+
+        // Find the index of the first user message
+        const firstUserIndex = validHistory.findIndex(msg => msg.role === 'user');
+
+        // If a user message exists, slice from there. If not, use empty history (the current message will start the convo)
+        if (firstUserIndex !== -1) {
+            validHistory = validHistory.slice(firstUserIndex);
+        } else {
+            validHistory = [];
+        }
 
         let reply: string;
 
@@ -192,12 +202,22 @@ export async function generateMedicalResponse(
         const messageWithContext = `${message}\n\n---\n${turnInfo}`;
 
         // Filter valid history entries
-        const validHistory = conversationHistory
+        let validHistory = conversationHistory
             .filter(msg => msg.content && msg.content.trim())
             .map(msg => ({
                 role: msg.role === 'assistant' ? 'model' as const : 'user' as const,
                 parts: [{ text: msg.content }]
             }));
+
+        // Find the index of the first user message
+        const firstUserIndex = validHistory.findIndex(msg => msg.role === 'user');
+
+        // If a user message exists, slice from there. If not, use empty history
+        if (firstUserIndex !== -1) {
+            validHistory = validHistory.slice(firstUserIndex);
+        } else {
+            validHistory = [];
+        }
 
         let reply: string;
 

@@ -1,9 +1,30 @@
 'use client';
 
+import { useState } from 'react';
 import { useChatStore } from '@/store/chatStore';
+
+type ConcernType = 'condition' | 'urination' | 'prostate' | 'health';
+
+const CONCERNS = [
+  { id: 'condition' as ConcernType, icon: 'favorite', title: '남성 컨디션', desc: '상담 전 질문을 정리합니다' },
+  { id: 'urination' as ConcernType, icon: 'water_drop', title: '배뇨 불편', desc: '간단 체크로 방향을 잡습니다' },
+  { id: 'prostate' as ConcernType, icon: 'monitor_heart', title: '전립선 관리', desc: '조기 검진 및 관리' },
+  { id: 'health' as ConcernType, icon: 'vital_signs', title: '남성 건강 체크', desc: '건강 검진 및 예방' },
+];
 
 export default function Home() {
   const { openChat } = useChatStore();
+  const [selectedConcern, setSelectedConcern] = useState<ConcernType | null>(null);
+
+  const handleConcernClick = (concernId: ConcernType) => {
+    setSelectedConcern(selectedConcern === concernId ? null : concernId);
+  };
+
+  const getSelectedTitle = () => {
+    if (!selectedConcern) return '선택 없음';
+    const concern = CONCERNS.find(c => c.id === selectedConcern);
+    return concern ? concern.title : '선택 없음';
+  };
 
   return (
     <div className="relative flex h-auto min-h-screen w-full flex-col overflow-x-hidden bg-[#f8f7f5]">
@@ -64,7 +85,7 @@ export default function Home() {
 
               <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
                 <button
-                  onClick={() => openChat({ intent: 'login' })}
+                  onClick={() => window.location.href = '/login'}
                   className="flex items-center justify-center gap-2 rounded-full h-14 px-8 bg-[#f27f0d] hover:bg-orange-600 text-white text-lg font-bold transition-all shadow-lg shadow-orange-500/20 hover:shadow-orange-500/30 transform hover:-translate-y-0.5"
                 >
                   로그인하고 상담 받기
@@ -105,60 +126,41 @@ export default function Home() {
 
             {/* Concern Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 px-4">
-              <div
-                onClick={() => openChat({ intent: 'start_check' })}
-                className="group cursor-pointer flex flex-col gap-4 p-5 rounded-xl border-2 border-[#f27f0d] bg-white shadow-lg transition-all relative overflow-hidden hover:shadow-xl"
-              >
-                <div className="absolute top-0 right-0 p-2 text-[#f27f0d]">
-                  <span className="material-symbols-outlined">check_circle</span>
-                </div>
-                <div className="size-12 rounded-full bg-[#f27f0d]/10 flex items-center justify-center text-[#f27f0d]">
-                  <span className="material-symbols-outlined" style={{ fontSize: '28px' }}>favorite</span>
-                </div>
-                <div>
-                  <p className="text-[#181411] text-base font-bold leading-normal">남성 컨디션</p>
-                  <p className="text-[#8a7560] text-sm font-normal leading-normal">상담 전 질문을 정리합니다</p>
-                </div>
-              </div>
-
-              <div
-                onClick={() => openChat({ intent: 'start_check' })}
-                className="group cursor-pointer flex flex-col gap-4 p-5 rounded-xl border border-transparent bg-white/50 hover:bg-white hover:shadow-md transition-all"
-              >
-                <div className="size-12 rounded-full bg-gray-100 text-gray-400 group-hover:bg-[#f27f0d]/10 group-hover:text-[#f27f0d] transition-colors flex items-center justify-center">
-                  <span className="material-symbols-outlined" style={{ fontSize: '28px' }}>water_drop</span>
-                </div>
-                <div>
-                  <p className="text-[#181411] text-base font-medium leading-normal">배뇨 불편</p>
-                  <p className="text-gray-500 text-sm font-normal leading-normal">간단 체크로 방향을 잡습니다</p>
-                </div>
-              </div>
-
-              <div
-                onClick={() => openChat({ intent: 'start_check' })}
-                className="group cursor-pointer flex flex-col gap-4 p-5 rounded-xl border border-transparent bg-white/50 hover:bg-white hover:shadow-md transition-all"
-              >
-                <div className="size-12 rounded-full bg-gray-100 text-gray-400 group-hover:bg-[#f27f0d]/10 group-hover:text-[#f27f0d] transition-colors flex items-center justify-center">
-                  <span className="material-symbols-outlined" style={{ fontSize: '28px' }}>monitor_heart</span>
-                </div>
-                <div>
-                  <p className="text-[#181411] text-base font-medium leading-normal">전립선 관리</p>
-                  <p className="text-gray-500 text-sm font-normal leading-normal">조기 검진 및 관리</p>
-                </div>
-              </div>
-
-              <div
-                onClick={() => openChat({ intent: 'start_check' })}
-                className="group cursor-pointer flex flex-col gap-4 p-5 rounded-xl border border-transparent bg-white/50 hover:bg-white hover:shadow-md transition-all"
-              >
-                <div className="size-12 rounded-full bg-gray-100 text-gray-400 group-hover:bg-[#f27f0d]/10 group-hover:text-[#f27f0d] transition-colors flex items-center justify-center">
-                  <span className="material-symbols-outlined" style={{ fontSize: '28px' }}>vital_signs</span>
-                </div>
-                <div>
-                  <p className="text-[#181411] text-base font-medium leading-normal">남성 건강 체크</p>
-                  <p className="text-gray-500 text-sm font-normal leading-normal">건강 검진 및 예방</p>
-                </div>
-              </div>
+              {CONCERNS.map((concern) => {
+                const isSelected = selectedConcern === concern.id;
+                return (
+                  <div
+                    key={concern.id}
+                    onClick={() => handleConcernClick(concern.id)}
+                    className={`group cursor-pointer flex flex-col gap-4 p-5 rounded-xl transition-all relative overflow-hidden
+                      ${isSelected
+                        ? 'border-2 border-[#f27f0d] bg-white shadow-lg'
+                        : 'border border-transparent bg-white/50 hover:bg-white hover:shadow-md'
+                      }`}
+                  >
+                    {isSelected && (
+                      <div className="absolute top-0 right-0 p-2 text-[#f27f0d]">
+                        <span className="material-symbols-outlined">check_circle</span>
+                      </div>
+                    )}
+                    <div className={`size-12 rounded-full flex items-center justify-center transition-colors
+                      ${isSelected
+                        ? 'bg-[#f27f0d]/10 text-[#f27f0d]'
+                        : 'bg-gray-100 text-gray-400 group-hover:bg-[#f27f0d]/10 group-hover:text-[#f27f0d]'
+                      }`}>
+                      <span className="material-symbols-outlined" style={{ fontSize: '28px' }}>{concern.icon}</span>
+                    </div>
+                    <div>
+                      <p className={`text-base leading-normal ${isSelected ? 'text-[#181411] font-bold' : 'text-[#181411] font-medium'}`}>
+                        {concern.title}
+                      </p>
+                      <p className={`text-sm font-normal leading-normal ${isSelected ? 'text-[#8a7560]' : 'text-gray-500'}`}>
+                        {concern.desc}
+                      </p>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
 
             {/* Selection Summary */}
@@ -169,17 +171,17 @@ export default function Home() {
                     <div className="flex items-center gap-2">
                       <span className="bg-green-100 text-green-700 text-xs font-bold px-2 py-1 rounded uppercase tracking-wide">선택 요약</span>
                     </div>
-                    <h3 className="text-[#181411] text-xl font-bold leading-tight">선택: 남성 컨디션</h3>
+                    <h3 className="text-[#181411] text-xl font-bold leading-tight">선택: {getSelectedTitle()}</h3>
                     <p className="text-[#8a7560] text-base font-normal leading-relaxed">
                       선택한 항목을 기준으로 상담 질문을 정리했습니다. 다음 단계는 로그인 후 확인할 수 있습니다.
                     </p>
                   </div>
                   <button
-                    onClick={() => openChat({ intent: 'start_check' })}
+                    onClick={() => setSelectedConcern(null)}
                     className="flex items-center gap-2 text-gray-500 hover:text-[#f27f0d] text-sm font-medium transition-colors w-fit"
                   >
                     <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>arrow_back</span>
-                    선택 변경
+                    선택 초기화
                   </button>
                 </div>
                 <div
@@ -219,7 +221,7 @@ export default function Home() {
                   </div>
 
                   <button
-                    onClick={() => openChat({ intent: 'login' })}
+                    onClick={() => window.location.href = '/login'}
                     className="flex min-w-[200px] cursor-pointer items-center justify-center gap-2 rounded-full h-14 px-8 bg-[#f27f0d] hover:bg-orange-600 transition-all transform hover:scale-105 shadow-lg shadow-orange-500/30 text-white text-base font-bold leading-normal tracking-[0.015em]"
                   >
                     <span>로그인 후 확인</span>

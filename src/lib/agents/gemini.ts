@@ -109,22 +109,33 @@ export async function generateHealthcareResponse(
     turnCount: number
 ): Promise<{ reply: string; requireLogin: boolean; cta?: { type: string; label: string } }> {
     try {
-        const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
-
-        const turnInfo = `\n\n[시스템 정보: 현재 ${turnCount}턴째입니다. ${turnCount >= 3 ? '로그인 언급 필수!' : ''} ${turnCount >= 5 ? '반드시 로그인 CTA를 포함하세요!' : ''}]`;
-
-        const chat = model.startChat({
-            history: conversationHistory.map(msg => ({
-                role: msg.role === 'assistant' ? 'model' : 'user',
-                parts: [{ text: msg.content }]
-            })),
-            systemInstruction: HEALTHCARE_SYSTEM_PROMPT + turnInfo,
+        const model = genAI.getGenerativeModel({
+            model: 'gemini-2.5-flash',
+            systemInstruction: HEALTHCARE_SYSTEM_PROMPT,
         });
 
-        const result = await chat.sendMessage(message);
-        const reply = result.response.text();
+        const turnInfo = `[현재 ${turnCount}턴째] ${turnCount >= 3 ? '로그인 언급 필수!' : ''} ${turnCount >= 5 ? '반드시 로그인 CTA 포함!' : ''}`;
+        const messageWithContext = `${message}\n\n---\n${turnInfo}`;
 
-        // Determine if login CTA should be shown
+        // Filter valid history entries (must alternate user/model)
+        const validHistory = conversationHistory
+            .filter(msg => msg.content && msg.content.trim())
+            .map(msg => ({
+                role: msg.role === 'assistant' ? 'model' as const : 'user' as const,
+                parts: [{ text: msg.content }]
+            }));
+
+        let reply: string;
+
+        if (validHistory.length > 0) {
+            const chat = model.startChat({ history: validHistory });
+            const result = await chat.sendMessage(messageWithContext);
+            reply = result.response.text();
+        } else {
+            const result = await model.generateContent(messageWithContext);
+            reply = result.response.text();
+        }
+
         const shouldShowLoginCta = turnCount >= 3;
 
         return {
@@ -137,13 +148,13 @@ export async function generateHealthcareResponse(
         };
     } catch (error) {
         console.error('Gemini Healthcare error:', error);
-        // Fallback response
         return {
             reply: '죄송해요, 잠시 연결이 불안정하네요 😅 다시 한번 말씀해주시겠어요?',
             requireLogin: false
         };
     }
 }
+
 
 export async function routeMedicalAgent(message: string): Promise<'gyneco' | 'penile' | 'general'> {
     try {
@@ -171,22 +182,33 @@ export async function generateMedicalResponse(
     turnCount: number
 ): Promise<{ reply: string; agentUsed: string; cta?: { type: string; label: string } }> {
     try {
-        const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
-
-        const turnInfo = `\n\n[시스템 정보: 현재 ${turnCount}턴째입니다. ${turnCount >= 3 ? '예약 제안 시작!' : ''} ${turnCount >= 5 ? '반드시 예약 CTA를 포함하세요!' : ''}]`;
-
-        const chat = model.startChat({
-            history: conversationHistory.map(msg => ({
-                role: msg.role === 'assistant' ? 'model' : 'user',
-                parts: [{ text: msg.content }]
-            })),
-            systemInstruction: MEDICAL_AGENT_PROMPTS[agent] + turnInfo,
+        const model = genAI.getGenerativeModel({
+            model: 'gemini-2.5-flash',
+            systemInstruction: MEDICAL_AGENT_PROMPTS[agent],
         });
 
-        const result = await chat.sendMessage(message);
-        const reply = result.response.text();
+        const turnInfo = `[현재 ${turnCount}턴째] ${turnCount >= 3 ? '예약 제안 시작!' : ''} ${turnCount >= 5 ? '반드시 예약 CTA 포함!' : ''}`;
+        const messageWithContext = `${message}\n\n---\n${turnInfo}`;
 
-        // Determine if booking CTA should be shown
+        // Filter valid history entries
+        const validHistory = conversationHistory
+            .filter(msg => msg.content && msg.content.trim())
+            .map(msg => ({
+                role: msg.role === 'assistant' ? 'model' as const : 'user' as const,
+                parts: [{ text: msg.content }]
+            }));
+
+        let reply: string;
+
+        if (validHistory.length > 0) {
+            const chat = model.startChat({ history: validHistory });
+            const result = await chat.sendMessage(messageWithContext);
+            reply = result.response.text();
+        } else {
+            const result = await model.generateContent(messageWithContext);
+            reply = result.response.text();
+        }
+
         const shouldShowBookingCta = turnCount >= 3;
 
         const agentMap = {
@@ -205,10 +227,10 @@ export async function generateMedicalResponse(
         };
     } catch (error) {
         console.error('Gemini Medical error:', error);
-        // Fallback response
         return {
             reply: '죄송합니다. 일시적인 오류가 발생했습니다. 다시 시도해주세요.',
             agentUsed: `m-${agent}`
         };
     }
 }
+

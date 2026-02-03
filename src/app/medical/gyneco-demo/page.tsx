@@ -4,32 +4,53 @@ import { useState, useEffect } from 'react';
 import { useChatStore } from '@/store/chatStore';
 import { GynecoSpinner } from '@/components/GynecoSpinner';
 
+import { createClient } from '@supabase/supabase-js';
+
+// Initialize Supabase (Client-side)
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
+const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
 export default function GynecoDemoPage() {
     const { openChat, setArea } = useChatStore();
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [isChecking, setIsChecking] = useState(true);
 
-    // Check initial auth state (simulate)
     useEffect(() => {
         setArea('medical');
-        // TODO: Replace with actual Supabase auth check
-        // const { data: { session } } = supabase.auth.getSession();
-        // setIsLoggedIn(!!session);
 
-        // Demo: Check if redirected from login with token
-        const hasToken = document.cookie.includes('supabase-auth-token'); // Simple check for demo
-        // For now, relies on manual login simulation or prop pass
+        const checkSession = async () => {
+            try {
+                const { data: { session } } = await supabase.auth.getSession();
+                setIsLoggedIn(!!session);
+            } catch (error) {
+                console.error('Session check failed', error);
+            } finally {
+                setIsChecking(false);
+            }
+        };
 
-        // Temporary: Auto-login if 'login=true' in URL (for dev testing)
-        if (window.location.search.includes('login=true')) {
-            setIsLoggedIn(true);
-        }
+        checkSession();
+
+        // Listen for auth changes
+        const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+            setIsLoggedIn(!!session);
+        });
+
+        return () => subscription.unsubscribe();
     }, [setArea]);
 
     const handleLogin = () => {
-        // In real app: redirect to login
-        // For demo flow: Simulate login
-        setIsLoggedIn(true);
+        window.location.href = '/login?redirect=/medical/gyneco-demo';
     };
+
+    if (isChecking) {
+        return (
+            <div className="flex h-screen items-center justify-center bg-[#f8f7f5]">
+                <div className="w-12 h-12 border-4 border-[#f27f0d] border-t-transparent rounded-full animate-spin"></div>
+            </div>
+        );
+    }
 
     if (!isLoggedIn) {
         return (

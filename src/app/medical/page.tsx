@@ -89,20 +89,22 @@ export default function MedicalPage() {
                                 <span className="text-gray-400 text-sm">수술 후 시뮬레이션</span>
                             </div>
 
-                            {/* Hero Image Cards */}
+                            {/* Hero Image Section */}
                             <div className="relative flex flex-col md:flex-row gap-4 mb-6">
-                                {/* Before Image */}
                                 <div className="flex-1 relative rounded-2xl overflow-hidden shadow-lg">
                                     <img
                                         src="/nano-banana-1770178749754.png"
                                         alt="수술 전후 비교 이미지"
                                         className="w-full h-auto object-cover rounded-2xl"
                                     />
-                                    {/* Center Compare Icon */}
-                                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
-                                        <div className="w-12 h-12 bg-white rounded-full shadow-xl flex items-center justify-center">
-                                            <span className="material-symbols-outlined text-gray-400">compare</span>
-                                        </div>
+                                    {/* Text Overlay */}
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent rounded-2xl flex flex-col justify-end p-6 md:p-8">
+                                        <h2 className="text-white text-2xl md:text-4xl font-bold mb-2 drop-shadow-lg">
+                                            당신의 자신감, 하이스트가 함께합니다
+                                        </h2>
+                                        <p className="text-white/90 text-sm md:text-lg max-w-xl drop-shadow-md">
+                                            AI 시뮬레이션으로 미리 확인하고, 전문의와 1:1 맞춤 상담으로 최적의 결과를 약속드립니다.
+                                        </p>
                                     </div>
                                 </div>
                             </div>
@@ -193,32 +195,42 @@ export default function MedicalPage() {
                             </div>
                         </div>
 
-                        {/* Penile Surgery */}
+                        {/* 여유증 상담 - 황인성 원장 */}
                         <div
-                            onClick={() => openChat({ area: 'medical', intent: 'penile_consult' })}
+                            onClick={() => openChat({ area: 'medical', intent: 'gyneco_consult' })}
                             className="group cursor-pointer bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-xl transition-all"
                         >
-                            <div className="aspect-video bg-gradient-to-br from-[#0d9488] to-[#14b8a6] rounded-xl mb-4 flex items-center justify-center">
-                                <span className="material-symbols-outlined text-white text-5xl">medical_services</span>
+                            <div className="aspect-video rounded-xl mb-4 overflow-hidden">
+                                <img
+                                    src="/dr_img2.jpg"
+                                    alt="황인성 원장"
+                                    className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300"
+                                />
                             </div>
-                            <h3 className="font-bold text-lg text-[#181411] mb-2">남성 미용수술</h3>
-                            <p className="text-sm text-gray-500 mb-4">개인 맞춤 상담을 통해 최적의 시술 방법을 안내받으세요.</p>
+                            <h3 className="font-bold text-lg text-[#181411] mb-1">여유증 상담</h3>
+                            <p className="text-xs text-[#f27f0d] font-medium mb-2">황인성 원장 | 여유증 전문</p>
+                            <p className="text-sm text-gray-500 mb-4">개인 맞춤 상담을 통해 최적의 시술 방법을 안내해드립니다.</p>
                             <div className="flex items-center gap-2 text-[#f27f0d] font-semibold text-sm">
                                 <span>상담 시작하기</span>
                                 <span className="material-symbols-outlined text-lg group-hover:translate-x-1 transition-transform">arrow_forward</span>
                             </div>
                         </div>
 
-                        {/* General Consultation */}
+                        {/* 남성 미용 상담 - 구진모 원장 */}
                         <div
-                            onClick={() => openChat({ area: 'medical', intent: 'general' })}
+                            onClick={() => openChat({ area: 'medical', intent: 'penile_consult' })}
                             className="group cursor-pointer bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-xl transition-all"
                         >
-                            <div className="aspect-video bg-gradient-to-br from-[#f27f0d] to-[#fb923c] rounded-xl mb-4 flex items-center justify-center">
-                                <span className="material-symbols-outlined text-white text-5xl">chat</span>
+                            <div className="aspect-video rounded-xl mb-4 overflow-hidden">
+                                <img
+                                    src="/dr_img1.jpg"
+                                    alt="구진모 원장"
+                                    className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300"
+                                />
                             </div>
-                            <h3 className="font-bold text-lg text-[#181411] mb-2">일반 상담</h3>
-                            <p className="text-sm text-gray-500 mb-4">배뇨 문제, 전립선 건강 등 다양한 고민을 상담받으세요.</p>
+                            <h3 className="font-bold text-lg text-[#181411] mb-1">남성 미용 상담</h3>
+                            <p className="text-xs text-[#f27f0d] font-medium mb-2">구진모 원장 | 남성 미용 전문</p>
+                            <p className="text-sm text-gray-500 mb-4">상담을 통해 최적의 방법으로 자신감을 찾아드립니다.</p>
                             <div className="flex items-center gap-2 text-[#f27f0d] font-semibold text-sm">
                                 <span>상담 시작하기</span>
                                 <span className="material-symbols-outlined text-lg group-hover:translate-x-1 transition-transform">arrow_forward</span>
@@ -268,9 +280,9 @@ export default function MedicalPage() {
                         </div>
                     </div>
                 </div>
-            </main>
+            </main >
 
             <Footer brandName="하이스트비뇨기과 의원" />
-        </div>
+        </div >
     );
 }

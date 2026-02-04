@@ -7,6 +7,7 @@ export type ChatIntent =
     | 'quick_consult'
     | 'login'
     | 'gyneco_demo'
+    | 'gyneco_consult'
     | 'penile_consult'
     | 'booking'
     | 'report'

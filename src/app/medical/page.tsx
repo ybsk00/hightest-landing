@@ -77,15 +77,93 @@ export default function MedicalPage() {
 
             {/* Main Content */}
             <main className="flex flex-col items-center py-8 px-4 md:px-10 grow">
-                <div className="flex flex-col max-w-[960px] w-full flex-1 gap-6">
-                    {/* Breadcrumb */}
-                    <div className="flex flex-wrap gap-2 items-center text-sm md:text-base">
-                        <a className="text-[#8a7560] font-medium hover:underline" href="/">홈</a>
-                        <span className="text-[#8a7560]">/</span>
-                        <a className="text-[#8a7560] font-medium hover:underline" href="/medical">진료과목</a>
-                        <span className="text-[#8a7560]">/</span>
-                        <span className="text-[#181411] font-bold">여유증 시뮬레이션</span>
-                    </div>
+                <div className="flex flex-col max-w-[1200px] w-full flex-1 gap-6">
+
+                    {/* Hero Section - Only visible when logged in */}
+                    {isLoggedIn && (
+                        <section className="w-full mb-8">
+                            {/* Section Title */}
+                            <div className="flex items-center gap-2 mb-4">
+                                <span className="text-gray-400 text-sm">수술 전</span>
+                                <span className="text-gray-300">|</span>
+                                <span className="text-gray-400 text-sm">수술 후 시뮬레이션</span>
+                            </div>
+
+                            {/* Hero Image Cards */}
+                            <div className="relative flex flex-col md:flex-row gap-4 mb-6">
+                                {/* Before Image */}
+                                <div className="flex-1 relative rounded-2xl overflow-hidden shadow-lg">
+                                    <img
+                                        src="/nano-banana-1770178749754.png"
+                                        alt="수술 전후 비교 이미지"
+                                        className="w-full h-auto object-cover rounded-2xl"
+                                    />
+                                    {/* Center Compare Icon */}
+                                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
+                                        <div className="w-12 h-12 bg-white rounded-full shadow-xl flex items-center justify-center">
+                                            <span className="material-symbols-outlined text-gray-400">compare</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Action Button Cards */}
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                {/* 시뮬레이션 정밀 분석 보고서 */}
+                                <div
+                                    onClick={() => openChat({ area: 'medical', intent: 'report' })}
+                                    className="cursor-pointer bg-[#1e3a5f] hover:bg-[#2d4a6f] text-white p-5 rounded-2xl flex items-center gap-4 transition-all duration-300 group shadow-lg"
+                                >
+                                    <div className="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center">
+                                        <span className="material-symbols-outlined text-2xl">analytics</span>
+                                    </div>
+                                    <div className="flex flex-col">
+                                        <span className="font-bold text-base">시뮬레이션 정밀 분석</span>
+                                        <span className="text-sm text-gray-300">보고서 정합</span>
+                                    </div>
+                                </div>
+
+                                {/* 의료진 1:1 화상 상담 예약 */}
+                                <div
+                                    onClick={() => openChat({ area: 'medical', intent: 'booking' })}
+                                    className="cursor-pointer bg-[#f59e0b] hover:bg-[#d97706] text-white p-5 rounded-2xl flex items-center gap-4 transition-all duration-300 group shadow-lg"
+                                >
+                                    <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
+                                        <span className="material-symbols-outlined text-2xl">video_camera_front</span>
+                                    </div>
+                                    <div className="flex flex-col">
+                                        <span className="font-bold text-base">의료진 1:1</span>
+                                        <span className="text-sm text-yellow-100">화상 상담 예약</span>
+                                    </div>
+                                </div>
+
+                                {/* 수술 프로세스 및 비용 안내 */}
+                                <div
+                                    onClick={() => openChat({ area: 'medical', intent: 'general' })}
+                                    className="cursor-pointer bg-[#f8b4b4] hover:bg-[#fca5a5] text-[#7c2d12] p-5 rounded-2xl flex items-center gap-4 transition-all duration-300 group shadow-lg"
+                                >
+                                    <div className="w-12 h-12 bg-white/40 rounded-xl flex items-center justify-center">
+                                        <span className="material-symbols-outlined text-2xl">paid</span>
+                                    </div>
+                                    <div className="flex flex-col">
+                                        <span className="font-bold text-base">수술 프로세스 및</span>
+                                        <span className="text-sm text-[#9a3412]">비용 안내</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    )}
+
+                    {/* Breadcrumb - shown when not logged in */}
+                    {!isLoggedIn && (
+                        <div className="flex flex-wrap gap-2 items-center text-sm md:text-base">
+                            <a className="text-[#8a7560] font-medium hover:underline" href="/">홈</a>
+                            <span className="text-[#8a7560]">/</span>
+                            <a className="text-[#8a7560] font-medium hover:underline" href="/medical">진료과목</a>
+                            <span className="text-[#8a7560]">/</span>
+                            <span className="text-[#181411] font-bold">여유증 시뮬레이션</span>
+                        </div>
+                    )}
 
                     {/* Title */}
                     <div className="flex flex-col gap-4 mt-2">

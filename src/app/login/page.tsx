@@ -1,13 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { createClient } from '@supabase/supabase-js';
+import { useAuthActions } from "@convex-dev/auth/react";
 import Footer from '@/components/Footer';
-
-// Initialize Supabase client
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 export default function LoginPage() {
     const [isSignUp, setIsSignUp] = useState(false);
@@ -16,6 +11,8 @@ export default function LoginPage() {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState<string | null>(null);
+
+    const { signIn } = useAuthActions();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -26,19 +23,12 @@ export default function LoginPage() {
         try {
             if (isSignUp) {
                 // Sign up
-                const { error } = await supabase.auth.signUp({
-                    email,
-                    password,
-                });
-                if (error) throw error;
-                setSuccess('회원가입이 완료되었습니다! 이메일을 확인해주세요.');
+                await signIn("password", { email, password, flow: "signUp" });
+                setSuccess('회원가입이 완료되었습니다!');
+                setTimeout(() => window.location.href = '/medical', 1000);
             } else {
                 // Sign in
-                const { error } = await supabase.auth.signInWithPassword({
-                    email,
-                    password,
-                });
-                if (error) throw error;
+                await signIn("password", { email, password, flow: "signIn" });
                 // Redirect on success
                 window.location.href = '/medical';
             }

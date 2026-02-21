@@ -7,6 +7,8 @@ export const metadata: Metadata = {
   description: "민감한 고민, 온라인에서 하이스트비뇨기과 의원이 먼저 정리해 드립니다. AI 시뮬레이션과 전문 상담을 경험해보세요.",
 };
 
+import { ConvexClientProvider } from "./ConvexClientProvider";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -25,8 +27,10 @@ export default function RootLayout({
         />
       </head>
       <body className="antialiased">
-        {children}
-        <ChatWidget />
+        <ConvexClientProvider>
+          {children}
+          <ChatWidget />
+        </ConvexClientProvider>
       </body>
     </html>
   );

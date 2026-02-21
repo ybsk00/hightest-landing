@@ -1,40 +1,24 @@
 'use client';
 
 import { useChatStore } from '@/store/chatStore';
-import { createClient } from '@supabase/supabase-js';
-import { useState, useEffect } from 'react';
+import { useConvexAuth } from "convex/react";
+import { useAuthActions } from "@convex-dev/auth/react";
+import { useEffect } from 'react';
 import Footer from '@/components/Footer';
-
-// Initialize Supabase (Client-side)
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 export default function MedicalPage() {
     const { openChat, setArea } = useChatStore();
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const { isAuthenticated, isLoading } = useConvexAuth();
+    const { signOut } = useAuthActions();
+
+    const isLoggedIn = isAuthenticated;
 
     useEffect(() => {
         setArea('medical');
-
-        // Check session
-        const checkSession = async () => {
-            const { data: { session } } = await supabase.auth.getSession();
-            setIsLoggedIn(!!session);
-        };
-        checkSession();
-
-        // Listen for auth changes
-        const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-            setIsLoggedIn(!!session);
-        });
-
-        return () => subscription.unsubscribe();
     }, [setArea]);
 
     const handleLogout = async () => {
-        await supabase.auth.signOut();
-        setIsLoggedIn(false);
+        await signOut();
         window.location.href = '/';
     };
 

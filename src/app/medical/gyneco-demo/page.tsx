@@ -5,40 +5,15 @@ import { useChatStore } from '@/store/chatStore';
 import { GynecoSpinner } from '@/components/GynecoSpinner';
 import Footer from '@/components/Footer';
 
-import { createClient } from '@supabase/supabase-js';
-
-// Initialize Supabase (Client-side)
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
+import { useConvexAuth } from "convex/react";
 
 export default function GynecoDemoPage() {
     const { openChat, setArea } = useChatStore();
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [isChecking, setIsChecking] = useState(true);
+    const { isAuthenticated, isLoading: isChecking } = useConvexAuth();
+    const isLoggedIn = isAuthenticated;
 
     useEffect(() => {
         setArea('medical');
-
-        const checkSession = async () => {
-            try {
-                const { data: { session } } = await supabase.auth.getSession();
-                setIsLoggedIn(!!session);
-            } catch (error) {
-                console.error('Session check failed', error);
-            } finally {
-                setIsChecking(false);
-            }
-        };
-
-        checkSession();
-
-        // Listen for auth changes
-        const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-            setIsLoggedIn(!!session);
-        });
-
-        return () => subscription.unsubscribe();
     }, [setArea]);
 
     const handleLogin = () => {

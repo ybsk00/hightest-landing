@@ -20,6 +20,12 @@ export default function LoginPage() {
         setError(null);
         setSuccess(null);
 
+        if (password.length < 8) {
+            setError('비밀번호는 최소 8자 이상이어야 합니다.');
+            setIsLoading(false);
+            return;
+        }
+
         try {
             if (isSignUp) {
                 // Sign up
@@ -110,7 +116,7 @@ export default function LoginPage() {
                                             onChange={(e) => setPassword(e.target.value)}
                                             placeholder="••••••••"
                                             required
-                                            minLength={6}
+                                            minLength={8}
                                             className="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#f27f0d] focus:border-transparent outline-none transition-all bg-gray-50"
                                         />
                                     </div>
